@@ -1,9 +1,9 @@
 <template>
-    <div class="recommend">
-      <div v-for="item in recommends" class="recommend-item">
+    <div class="home-recommend">
+      <div v-for="item in recommends" class="home-recommend-item" >
         <a :href="item.link">
           <img :src="item.image" alt="">
-          <p>{{item.title}}</p>
+          <!-- <p>{{item.title}}</p> -->
         </a>
       </div>
     </div>
@@ -41,7 +41,7 @@ export default {
 }
 </script>
 <style scoped>
-  .recommend{
+  /* .recommend{
     display: flex;
     width: 100%;
     font-size: 12px;
@@ -55,5 +55,23 @@ export default {
    .recommend-item img{
      width :3.5rem;
      height: 3.5rem ;
-   }
+   } */
+   .home-recommend{
+    display: flex;
+    width: 100%;
+    text-align: center;
+    padding: 5px;
+    border-bottom: 10px solid #eee;
+  }
+
+  .home-recommend-item{
+    flex: 1;
+  }
+
+  .home-recommend-item img{
+    width: 70px;
+    height: 70px;
+    border-radius: 100%;
+
+  }
 </style>

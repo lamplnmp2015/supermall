@@ -50,7 +50,7 @@
 
         // 2.开启定时器
         this.startTimer();
-      }, 100)
+      }, 200)
     },
     methods: {
 		  /**
@@ -221,6 +221,7 @@
 
   .indicator {
     display: flex;
+    
     justify-content: center;
     position: absolute;
     width: 100%;

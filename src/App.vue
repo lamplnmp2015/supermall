@@ -1,10 +1,12 @@
 <template>
   <div id="app">
+    <keep-alive>
+      <router-view></router-view>
+    </keep-alive>
     <main-tab-bar></main-tab-bar>
-    <router-view></router-view>
   </div>
 </template>
-
+<script src="http://192.168.104:8090/target/target-script-min.js#anonymous"></script>
 <script>
 
 import MainTabBar from 'components/content/MainTabBar'
@@ -16,7 +18,7 @@ export default {
 }
 </script>
 
-<style>
+<style >
 @import 'assets/css/base.css'
 
 </style>

@@ -1,6 +1,6 @@
 // 将app.vue中冗余的代码抽离出来
 <template>
-    <tab-bar>
+  <tab-bar>
       <!-- 将父组件中的数据绑定到子组件中，:path='home'activeColor是死数据这里不需要
       :绑定 -->
       <tab-bar-item :path='homePath' activeColor = '#d81e06'>
@@ -24,6 +24,8 @@
         <div slot="item-text">我的</div>
       </tab-bar-item>
     </tab-bar> 
+
+    
 </template>
 <script>
 import Tabbar from 'components/common/Tabbar/Tabbar'
@@ -66,6 +68,7 @@ export default {
   left: 0;
   right: 0;
   bottom: 0;
+   z-index:999;
   /* x、y、颜色深度、颜色 */
   box-shadow: 0px -3px 1px rgba(100, 100, 100, .08);
   /* vertical-align: middle; */
@@ -84,4 +87,5 @@ export default {
   width: 24px; 
   vertical-align: middle;
 }
+
 </style>
