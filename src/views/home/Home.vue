@@ -5,7 +5,7 @@
         <div slot="center">购物街</div>
       </nav-bar>
       <!-- </div> -->
-      <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3'>
+      <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @scroll='contentScroll'>
           <home-swiper v-bind:banners='banner'></home-swiper> 
           <home-recommend v-bind:recommends='recommend'></home-recommend>
           <featrue-view></featrue-view>  
@@ -13,7 +13,7 @@
           <goods-list v-bind:goodsList='goods[showGoodsIndex].list'></goods-list>
     
       </scroll> 
-      <back-top  v-on:click.native='backTop'/>                     
+      <back-top  v-on:click.native='backTop' v-show='isShowBackTop'/>                     
     </div>
    
 </template>   
@@ -47,6 +47,7 @@ export default {
   data() {
       return {
         result:null,
+        isShowBackTop :false,
         banner:[],
         recommend:[],
         scroll:'',
@@ -160,7 +161,16 @@ methods:{
  
   backTop(){ 
     console.log(this.$refs.scroller.scroll);
-    this.$refs.scroller.scroll.scrollTo(0, 0,1)
+    this.$refs.scroller.scroll.scrollTo(0, 0,900)
+  },
+  contentScroll(params){
+    if(params.y < -300){
+      this.isShowBackTop = true
+    }else if(params.y > -300){
+      this.isShowBackTop = false
+    }
+    
+    console.log(params);
   }
 },
 mounted(){

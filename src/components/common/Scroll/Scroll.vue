@@ -43,16 +43,6 @@ methods: {
     console.log('22222');
     
   },
-  _initScroll () {
-      if(!this.scroll){
-        this.scroll = new BScroll(this.$refs.wrapper,{
-          click:true,
-          probeType: 3
-        })
-      }else{
-        this.scroll.refresh()
-      }
-    }
 },
 //请求数据
 created() {
@@ -63,14 +53,10 @@ mounted() {
      probeType:this.probeType
   })
   this.scroll.on('scroll',(position)=>{
-    console.log(position);
+    // console.log(position);
+    this.$emit('scroll', position);
   })
-  this.$nextTick(() => {
-      // DOM 现在更新了
-      // `this` 绑定到当前实例
-      this._initScroll()
-  })
-    console.log(this.scroll)
+  
 }
 }
 </script>
@@ -84,8 +70,8 @@ mounted() {
  .content{
    /* height: calc(100%-93px); */
    /* height: 1000px; */
-   height: 100%;
-   /* min-height: 12000px; */
+   /* height: 100%; */
+   min-height: 6000px;
 
     /* position: absolute;
     top: 44px;
