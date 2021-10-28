@@ -194,7 +194,7 @@ beforeDestroy: function () {
 </script>
 <style scoped>
     #home {
-    /* padding-top: 44px; */
+    padding-top: 44px;
     height: 100vh;
     display: flex;
   }
@@ -219,7 +219,7 @@ beforeDestroy: function () {
 
   .home-scroller{
     /*height:300px;*/
-    overflow: hidden;
+    /* overflow: scroll-y; */
     position: absolute;
     top: 44px;
     bottom: 49px;
