@@ -194,7 +194,7 @@ beforeDestroy: function () {
 </script>
 <style scoped>
     #home {
-    padding-top: 44px;
+    /* padding-top: 44px; */
     height: 100vh;
     display: flex;
   }
