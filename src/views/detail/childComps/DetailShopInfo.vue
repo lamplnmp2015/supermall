@@ -62,7 +62,7 @@ mounted() {
   margin: 0 auto;
 }
   .top{
-    width: 30%;
+    /* width: 30%; */
     display: flex;
     float: left;
     margin: 20px auto;
@@ -90,6 +90,7 @@ mounted() {
     height: 30px;
     line-height: 30px;
     font-size: 16px;
+    margin-left: 5px;
   }
   .service{
     width: 100%;
