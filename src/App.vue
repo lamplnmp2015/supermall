@@ -1,9 +1,10 @@
 <template>
   <div id="app">
     <keep-alive>
-      <router-view></router-view>
+      <router-view v-if="$route.meta.keepAlive"></router-view>
     </keep-alive>
-    <main-tab-bar></main-tab-bar>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
+    <main-tab-bar v-if="$route.meta.keepAlive"></main-tab-bar>
   </div>
 </template>
 <script src="http://192.168.104:8090/target/target-script-min.js#anonymous"></script>

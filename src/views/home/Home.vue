@@ -1,15 +1,21 @@
 <template>
     <div id='home' >
-      <!-- <div class="home-nav-bar"> -->
+      <div class="home-nav-bar">
       <nav-bar class="nav_bar">
         <div slot="center">购物街</div>
       </nav-bar>
-      <!-- </div> -->
-      <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @scroll='contentScroll'>
-          <home-swiper v-bind:banners='banner'></home-swiper> 
+      </div>
+  
+      <tab-control @showChange = 'changeGoodsData' 
+      :class="{home_tab_control2:isFixed}" v-bind:titles="title"  ref="tabControl1"/>
+      <scroll class="home-scroller" ref='scroller' 
+      v-bind:pull-up-load = "true" @pullingUp = 'loadMore'     v-bind:probe-type='3' @scroll='contentScroll'>
+          <home-swiper v-bind:banners='banner' @swiperImageLoad='imageLoad' ref='home_swiper'></home-swiper> 
           <home-recommend v-bind:recommends='recommend'></home-recommend>
           <featrue-view></featrue-view>  
-          <tab-control @showChange = 'changeGoodsData' class="home-tab-control" v-bind:titles="title"></tab-control> 
+          <tab-control @showChange = 'changeGoodsData' 
+          ref="tabControl"
+          class="home_tab_control" v-bind:titles="title"></tab-control> 
           <goods-list v-bind:goodsList='goods[showGoodsIndex].list'></goods-list>
     
       </scroll> 
@@ -21,15 +27,14 @@
 <script>
 import {getHomeMultidata, getHomeGoods} from 'network/home'
 import NavBar from 'components/common/NavBar/NavBar';
-import HomeSwiper from './childComps/HomeSwiper.vue';
+import HomeSwiper from './childComps/HomeSwiper';
 import HomeRecommendView from './childComps/HomeRecommendView'
 import FeatrueView from './childComps/FeatrueView'
 import TabControl from 'components/content/tabControl/TabControl.vue';
 import GoodsList from 'components/content/goods/GoodsList.vue';
 import ScrollVue from 'components/common/Scroll/Scroll';
 import BackTopVue from 'components/content/backTop/BackTop';
-
-
+import {debounce}  from 'common/utils';
 export default {
   name:'Home',
   components:{
@@ -76,26 +81,41 @@ export default {
             ]
           }
         },
-        showGoodsIndex:'pop'
-
+        showGoodsIndex:'pop',
+        tabOffSetTop:0,
+        isFixed:false
         
         // top:0
       }
    },
    activated() {
-     console.log('top='+this.$top);
-    
      window.scrollTo(0, this.$top);
    },
    
    
 created(){
+  let obj = [
+    {
+      'name':'test'
+    }
+  ]
+   
+ 
+  const name = obj && obj.name;
+  console.log('name='+name);
   this.getHomeMultidata()
   this.getHomeGoods('pop')
   this.getHomeGoods('sell')
   this.getHomeGoods('new')
+  
 },
 methods:{
+  imageLoad(){
+    this.tabOffSetTop = this.$refs.tabControl.$el.offsetTop
+
+    console.log(this.$refs.tabControl.$el.offsetTop);
+
+  },
   handleScroll() {
     // this.top = this.$refs.scroll_top.getBoundingClientRect().top;
     
@@ -105,27 +125,22 @@ methods:{
     var documentScrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
     //浏览器窗口的高度
     var getWindowHeight = document.documentElement.clientHeight || document.body.clientHeight;
-    // console.log(scrollTop);
-    // console.log(getWindowHeight);
-    console.log('浏览器窗口高度='+getWindowHeight);
-    console.log('滚动的距离='+scrollTop);
-    console.log('文档高度='+documentScrollHeight);
+
+    
      
     if (scrollTop + getWindowHeight >= documentScrollHeight-200) {
-      console.log(11111111111111)
      this.getHomeGoods(this.showGoodsIndex)
     }
    
   },
   getHomeMultidata(){
     getHomeMultidata().then(res=>{
-      // console.log(JSON.parse(res.data));
-      console.log(res.data);
       //res变量名会被回收，回收机制发现res的值没有指向了也会回收
       // 所以先赋值给另一个变量
       this.result = res;
       this.banner = res.data.banner.list
       this.recommend = res.data.recommend.list
+      
     })
   },
   getHomeGoods(type){
@@ -133,12 +148,19 @@ methods:{
     getHomeGoods(type,page).then(res=>{
       this.goods[type].list.push(...res.data.list)
       this.goods[type].page = res.data.page;
-    console.log(this.goods[type]);
-    console.log(this.goods[type].page);
-  })
+      // this.$refs.scroller.refresh()
+      this.$refs.scroller.finishPullUp()
+    }).catch(err=>{
+      getHomeGoods(type,page).then(res=>{
+      this.goods[type].list.push(...res.data.list)
+      this.goods[type].page = res.data.page;
+      // this.$refs.scroller.refresh()
+      this.$refs.scroller.finishPullUp()
+    })
+    })
   },
   changeGoodsData(index){
-    console.log('index='+index);
+    console.log('index');
     switch(index){
       case 0:
       this.showGoodsIndex = 'pop';
@@ -150,6 +172,8 @@ methods:{
       this.showGoodsIndex = 'sell';
       break;
     }
+    this.$refs.tabControl1.activeIndex = index
+    this.$refs.tabControl.activeIndex = index
     // if(index == 0){
     //   this.showGoodsIndex = 'pop';
     // }else if(index == 1){
@@ -160,35 +184,49 @@ methods:{
   },
  
   backTop(){ 
-    console.log(this.$refs.scroller.scroll);
-    this.$refs.scroller.scroll.scrollTo(0, 0,900)
+    this.$refs.scroller.scrollTo(0, 0,900)
   },
   contentScroll(params){
+    console.log(params.y);
+    this.isFixed = -params.y < this.tabOffSetTop?false:true
     if(params.y < -300){
+      
       this.isShowBackTop = true
     }else if(params.y > -300){
       this.isShowBackTop = false
+     
     }
-    
-    console.log(params);
-  }
+  },
+  
+  loadMore(){
+    this.getHomeGoods(this.showGoodsIndex)
+  },
+  
+ 
 },
 mounted(){
-  window.addEventListener("scroll", this.handleScroll, true);
+  
+  /**
+   * 监听图片加载完成后refresh
+   */
+  const refresh = debounce(this.$refs.scroller.refresh,300)
+  this.$bus.$on('itemImgLoad',()=>{
+    refresh()
+  })
+  // window.addEventListener("scroll", this.handleScroll, true);
   
 },
 updated() {
   
 },
 beforeDestroy: function () {
-  window.removeEventListener("scroll", this.handleScroll,true);
+  // window.removeEventListener("scroll", this.handleScroll,true);
 },
-
-  beforeRouteLeave (to, from, next) {
-    // ...
-    this.$top = document.documentElement.scrollTop || document.body.scrollTop;
-    next();
-  }
+beforeRouteLeave (to, from, next) {
+  // ...
+  this.$top = document.documentElement.scrollTop || document.body.scrollTop;
+  next();
+}
 
 }
 </script>
@@ -200,6 +238,7 @@ beforeDestroy: function () {
   }
 
   .home-nav-bar {
+    width: 100%;
     background-color: var(--color-tint);
     color:#fff;
     position: fixed;
@@ -209,12 +248,27 @@ beforeDestroy: function () {
     z-index: 9;
 
   }
-
-  .home-tab-control{
+  .fixed{
+    position: fixed;
+    top: 100px;
+    left: 0;
+    right: 0;
+    z-index: 999;
+  }
+  .home_tab_control{
     /*两个要混合使用*/
+    width: 100%;
     position: sticky;
     top: 43px;/*顶部navbar的高度*/
     z-index: 9;
+  }
+  .home_tab_control2{
+    overflow: hidden;
+    width: 100%;
+    position: fixed;
+    top: 43px;
+    z-index:9;
+    clear: both;
   }
 
   .home-scroller{
@@ -229,5 +283,12 @@ beforeDestroy: function () {
     overflow: hidden;
     margin-top:44px; */
   }
+  .nav_bar{
+    position: fixed;
+    top: 0;
+    overflow: hidden;
+    
+  }
   
+
 </style>

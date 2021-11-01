@@ -1,13 +1,13 @@
 <template>
-    <div class="goods">
+    <div class="goods" >
       <goods-list-item v-for="(item,index) in goodsList" class="goods-list-item">
-        <div slot="goods" class="goods-slot">
-          <a :href="item.link">
+        <div slot="goods" class="goods-slot" @click="itemClick(item.iid)">
+          <!-- <a :href="item.link"> -->
           
-            <img :src="item.show.img" :style="'width:' + item.show.w*0.57 + 'px;height:'+item.show.h*0.65+'px;border-radius:5px;margin:0 auto'"  alt="">
+            <img @load='imgLoad' :src="item.show.img" :style="'width:' + item.show.w*0.57 + 'px;height:'+item.show.h*0.65+'px;border-radius:5px;margin:0 auto'"  alt="">
             <span class = 'price' >{{item.orgPrice}}</span>
             <div class="title">{{item.title}}</div>
-          </a>
+          <!-- </a> -->
           
         </div>
       </goods-list-item>
@@ -27,6 +27,7 @@ export default {
    data() {
      
       return {
+        itemGoodsIid:0
       }
    },
    components: {
@@ -44,6 +45,15 @@ export default {
   mounted(){
   },
   methods:{
+    imgLoad(){
+      this.$bus.$emit('itemImgLoad')
+    },
+    itemClick(iid){
+      console.log('跳转到详情页');
+      console.log(iid);
+      // this.$router.push('/detail?iid='+iid)
+      this.$router.push('/detail/'+iid)
+    }
   }
 
 

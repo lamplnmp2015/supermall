@@ -13,3 +13,11 @@ export function getHomeGoods(type,page){
     }
   }); 
 }
+export function getDetailData(id){
+  return request({
+    url:'/detail',
+    params:{
+      id:String(id)
+    }
+  })
+}

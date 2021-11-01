@@ -7,8 +7,9 @@
 </template>
 
 <script>
-import BScroll from 'better-scroll'
+import BScroll, { PullUpLoad } from 'better-scroll'
 export default {
+name:'Scroll',
 data() {
   return{
     scroll:{
@@ -28,6 +29,10 @@ props: {
   probeType:{
      type:Number,
      default:0 
+  },
+  pullUpLoad:{
+    type:Boolean,
+    default:false
   }
 },
 //对象内部的属性监听，也叫深度监听
@@ -39,10 +44,16 @@ computed: {
 //方法表示一个具体的操作，主要书写业务逻辑；
 methods: { 
   scrollTo(x, y, time=300) {
-    this.scroll.scrollTo(x, y, time)
-    console.log('22222');
-    
+    this.scroll.scrollTo(x, y, time) 
   },
+  finishPullUp(){
+    this.scroll.finishPullUp()
+  },
+  refresh() {
+    // this.scroll 是创建的的 better-scroll 实例 调用其 refresh 方法进行刷新
+    this.scroll.refresh()
+    console.log('refresh');
+  }
 },
 //请求数据
 created() {
@@ -50,12 +61,27 @@ created() {
 mounted() {
   this.scroll = new BScroll(this.$refs.wrapper,{
      click:true,
-     probeType:this.probeType
+     probeType:this.probeType,
+    //  pullUpLoad:this.pullUpLoad
+    pullUpLoad:{
+      threshold:30
+    }
   })
-  this.scroll.on('scroll',(position)=>{
-    // console.log(position);
-    this.$emit('scroll', position);
-  })
+  //实时位置
+  if(this.probeType == 2 || this.probeType == 3){
+    this.scroll.on('scroll',(position)=>{
+      // console.log(position);
+      this.$emit('scroll', position);
+    })
+  }
+  
+  //下拉事件
+  if(this.pullUpLoad !=null){
+    this.scroll.on('pullingUp',()=>{
+      this.$emit('pullingUp');
+    })
+    this.scroll.refresh()
+  }
   
 }
 }
@@ -68,13 +94,13 @@ mounted() {
    flex: 1;
  }
  .content{
-   /* height: calc(100%-93px); */
+   /* height: calc(100%-100px); */
    /* height: 1000px; */
    /* height: 100%; */
-   min-height: 6000px;
+  
 
     /* position: absolute;
-    top: 44px;
+    top: 10px;
     bottom: 49px;
     right: 0;
     left: 0; */

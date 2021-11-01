@@ -27,7 +27,7 @@
       },
       moveRatio: {
         type: Number,
-        default: 0.25
+        default: 0.10
       },
       showIndicator: {
         type: Boolean,
