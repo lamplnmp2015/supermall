@@ -1,18 +1,27 @@
 <template>
-  <div>
-    <nav-bar class="nav_bar">
-        <div class="nav_left" slot="left" @click="backBefore">
-          <img src="~assets/img/detail/back.svg">
-        </div>
-         <tab-control slot="center"
-          ref="tabControl"
-          class="home_tab_control" v-bind:titles="title" @showChange ='detailChange'>
-          </tab-control> 
-    </nav-bar>
+  <div id ='detail'>
+    <div class="detail-nav-bar">
+      <nav-bar class="nav_bar">
+          <div class="nav_left" slot="left" @click="backBefore">
+            <img src="~assets/img/detail/back.svg" @load="swiperImageLoad">
+          </div>
+          <tab-control slot="center"
+            ref="tabControl"
+            class="home_tab_control" v-bind:titles="title" @showChange ='detailChange'>
+            </tab-control> 
+      </nav-bar>
+    </div>
+    
+    <!-- <div class="home-nav-bar">
+      <nav-bar class="nav_bar">
+        <div slot="center">购物街</div>
+      </nav-bar>
+      </div> -->
     <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore'>
-      <detail-swiper :swiperdata='swiperData' ></detail-swiper>
+      <detail-swiper :swiperdata='swiperData' @swiperImageLoad ='swiperImageLoad' ></detail-swiper>
       <detail-item-info :itemInfo = 'itemInfo' :columns='columns' :service='service'></detail-item-info>
-      <detail-shop-info :shopInfo='shopInfo'></detail-shop-info>
+      <detail-shop-info :shopInfo='shopInfo' @swiperImageLoad2 ='swiperImageLoad2'></detail-shop-info>
+      <detail-more :detailInfo='detailInfo'></detail-more>
     </scroll>
   </div>
 </template>
@@ -25,6 +34,8 @@ import Scroll from 'components/common/Scroll/Scroll'
 import DetailSwiper from './DetailSwiper'
 import DetailItemInfo from 'views/detail/childComps/DetailItemInfo'
 import DetailShopInfo from 'views/detail/childComps/DetailShopInfo'
+import DetailMore from 'views/detail/childComps/DetailMore'
+import {debounce}  from 'common/utils';
 export default {
 data() {
  return{
@@ -48,6 +59,9 @@ data() {
    },
    service:{
 
+   },
+   detailInfo:{
+
    }
  }
 },
@@ -60,7 +74,8 @@ components: {
   Scroll,
   DetailSwiper,
   DetailItemInfo,
-  DetailShopInfo
+  DetailShopInfo,
+  DetailMore
   
 },
 //静态
@@ -68,6 +83,7 @@ props: {
 },
 //对象内部的属性监听，也叫深度监听
 watch: {
+  
 },
 //属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算。主要当作属性来使用；
 computed: { 
@@ -80,8 +96,26 @@ methods: {
       this.itemInfo = res.result.itemInfo
       this.shopInfo = res.result.shopInfo
       this.columns = res.result.columns
-      console.log(res.result);
+      this.detailInfo = res.result.detailInfo.detailImage[0]
+      this.$refs.scroller.refresh
+      // console.log(res.result);
+      console.log(res.result.detailInfo.detailImage[0]);
     })
+  },
+  swiperImageLoad(){
+    console.log('1111');
+    
+    this.$refs.scroller.refresh()
+    // const refresh = debounce(this.$refs.scroller.refresh,300)
+    // refresh()
+  },
+  swiperImageLoad2(){
+    console.log('2222');
+    
+    this.$refs.scroller.refresh()
+    console.log(this.$refs.scroller.scroll);
+    // const refresh = debounce(this.$refs.scroller.refresh,300)
+    // refresh()
   },
   detailChange(index){
     switch(index){
@@ -109,10 +143,10 @@ methods: {
 },
 //请求数据
 created() {
-  console.log(this.$route.params);
+  
   this.getDetailData(this.$route.params.iid);
 },
-mounted() {
+mounted() { 
 },
 beforeRouteLeave(to, from, next) {
  from.meta.keepAlive = false;
@@ -124,7 +158,28 @@ beforeRouteLeave(to, from, next) {
 </script>
 
 <style scoped>
-  
+  .detail-nav-bar {
+    width: 100%;
+    background-color: var(--color-tint);
+    color:#fff;
+    position: fixed;
+    left: 0;
+    right:0;
+    top: 0;
+    z-index: 9;
+
+  }
+  /* .home-nav-bar {
+    width: 100%;
+    background-color: var(--color-tint);
+    color:#fff;
+    position: fixed;
+    left: 0;
+    right:0;
+    top: 0;
+    z-index: 9;
+
+  } */
   .nav_bar{
     width: 100%;
     display: flex;
@@ -133,14 +188,17 @@ beforeRouteLeave(to, from, next) {
   .home-scroller{
     /*height:300px;*/
     /* overflow: scroll-y; */
+    height: calc(100% - 43px);
     position: absolute;
-    top: 44px;
-    bottom: 49px;
+    top: 43px;
+    bottom: 0px;
     right: 0;
     left: 0;
-    /* height: calc(100% - 45px);
-    overflow: hidden;
-    margin-top:44px; */
+   
+    /* border: 2px solid red; */
+    /* height: calc(100% + 45px); */
+    /* overflow: hidden; */
+    /* margin-top:44px; */
   }
   .ul{
     height: 100%;

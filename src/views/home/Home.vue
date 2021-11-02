@@ -17,7 +17,6 @@
           ref="tabControl"
           class="home_tab_control" v-bind:titles="title"></tab-control> 
           <goods-list v-bind:goodsList='goods[showGoodsIndex].list'></goods-list>
-    
       </scroll> 
       <back-top  v-on:click.native='backTop' v-show='isShowBackTop'/>                     
     </div>
@@ -128,7 +127,7 @@ methods:{
 
     
      
-    if (scrollTop + getWindowHeight >= documentScrollHeight-200) {
+    if (scrollTop + getWindowHeight >= documentScrollHeight-500) {
      this.getHomeGoods(this.showGoodsIndex)
     }
    
@@ -148,13 +147,18 @@ methods:{
     getHomeGoods(type,page).then(res=>{
       this.goods[type].list.push(...res.data.list)
       this.goods[type].page = res.data.page;
-      // this.$refs.scroller.refresh()
+       this.$nextTick(() => {
+        this.$refs.scroller.refresh()
+      })
       this.$refs.scroller.finishPullUp()
     }).catch(err=>{
       getHomeGoods(type,page).then(res=>{
       this.goods[type].list.push(...res.data.list)
       this.goods[type].page = res.data.page;
-      // this.$refs.scroller.refresh()
+      this.$nextTick(() => {
+        this.$refs.scroller.refresh()
+      })
+      
       this.$refs.scroller.finishPullUp()
     })
     })
@@ -274,6 +278,7 @@ beforeRouteLeave (to, from, next) {
   .home-scroller{
     /*height:300px;*/
     /* overflow: scroll-y; */
+    height: calc(100%-89px);
     position: absolute;
     top: 44px;
     bottom: 49px;

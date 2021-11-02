@@ -1,11 +1,11 @@
 <template>
-<div>
+<!-- <div> -->
 <swiper class="detail_swiper">
   <swiper-item  v-for="(item, index) in swiperdata" >
-    <img :src="item" alt="">
+    <img :src="item" alt="" @load = 'imgLoad'>
   </swiper-item>
 </swiper>
-</div>
+<!-- </div> -->
 </template>
 
 <script>
@@ -44,6 +44,10 @@ computed: {
 },
 //方法表示一个具体的操作，主要书写业务逻辑；
 methods: { 
+  imgLoad(){
+     this.$emit('swiperImageLoad')
+   
+  }
 },
 //请求数据
 created() {
