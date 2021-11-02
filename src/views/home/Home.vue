@@ -1,5 +1,6 @@
 <template>
     <div id='home' >
+      <div class='loader' v-if="isLoadShow"></div>
       <div class="home-nav-bar">
       <nav-bar class="nav_bar">
         <div slot="center">购物街</div>
@@ -82,7 +83,8 @@ export default {
         },
         showGoodsIndex:'pop',
         tabOffSetTop:0,
-        isFixed:false
+        isFixed:false,
+        isLoadShow:false
         
         // top:0
       }
@@ -144,9 +146,11 @@ methods:{
   },
   getHomeGoods(type){
     let page = this.goods[type].page+1;
+    this.isLoadShow = true;
     getHomeGoods(type,page).then(res=>{
       this.goods[type].list.push(...res.data.list)
       this.goods[type].page = res.data.page;
+      this.isLoadShow = false;
        this.$nextTick(() => {
         this.$refs.scroller.refresh()
       })
@@ -293,6 +297,27 @@ beforeRouteLeave (to, from, next) {
     top: 0;
     overflow: hidden;
     
+  }
+    .loader{
+      border:6px solid #f3f3f3;
+      border-radius:50%;
+      border-top:6px solid #A2A2A2;
+      width:50px;
+      height:50px;
+      /* animation-name:load; */
+      animation:load 2s linear infinite;
+      z-index: 999;
+      position: fixed;
+      top: 50%;
+      right: 40%;
+  }
+  @keyframes load{
+      0%{
+          transform: rotate(0deg);
+      }
+      100%{
+          transform:rotate(360deg);
+      }
   }
   
 

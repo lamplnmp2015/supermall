@@ -1,5 +1,6 @@
 <template>
   <div id ='detail'>
+    
     <div class="detail-nav-bar">
       <nav-bar class="nav_bar">
           <div class="nav_left" slot="left" @click="backBefore">
@@ -62,7 +63,8 @@ data() {
    },
    detailInfo:{
 
-   }
+   },
+   
  }
 },
 props:{
@@ -240,4 +242,5 @@ beforeRouteLeave(to, from, next) {
     top: 43px;/*顶部navbar的高度*/
     z-index: 9;
   }
+
 </style>

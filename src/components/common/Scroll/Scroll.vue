@@ -61,6 +61,7 @@ created() {
 mounted() {
   this.scroll = new BScroll(this.$refs.wrapper,{
      click:true,
+     scrollX:true,
      probeType:this.probeType,
     //  pullUpLoad:this.pullUpLoad
     pullUpLoad:{
