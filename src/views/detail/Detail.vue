@@ -1,6 +1,5 @@
 <template>
   <div id ='detail'>
-    
     <div class="detail-nav-bar">
       <nav-bar class="nav_bar">
           <div class="nav_left" slot="left" @click="backBefore">
@@ -18,12 +17,13 @@
         <div slot="center">购物街</div>
       </nav-bar>
       </div> -->
-    <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore'>
+    <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore' @scroll='contentScroll'>
       <detail-swiper :swiperdata='swiperData' @swiperImageLoad ='swiperImageLoad' ></detail-swiper>
       <detail-item-info :itemInfo = 'itemInfo' :columns='columns' :service='service'></detail-item-info>
       <detail-shop-info :shopInfo='shopInfo' @swiperImageLoad2 ='swiperImageLoad2'></detail-shop-info>
-      <detail-more :detailInfo='detailInfo'></detail-more>
+      <detail-more :detailInfo='detailInfo' @swiperImageLoad2 ='swiperImageLoad2'></detail-more>
     </scroll>
+    <back-top  v-on:click.native='backTop' v-show='isShowBackTop'/>
   </div>
 </template>
 
@@ -36,7 +36,8 @@ import DetailSwiper from './DetailSwiper'
 import DetailItemInfo from 'views/detail/childComps/DetailItemInfo'
 import DetailShopInfo from 'views/detail/childComps/DetailShopInfo'
 import DetailMore from 'views/detail/childComps/DetailMore'
-import {debounce}  from 'common/utils';
+import {debounce}  from 'common/utils'
+import BackTop from 'components/content/backTop/BackTop'
 export default {
 data() {
  return{
@@ -64,7 +65,7 @@ data() {
    detailInfo:{
 
    },
-   
+   isShowBackTop :false,
  }
 },
 props:{
@@ -77,8 +78,8 @@ components: {
   DetailSwiper,
   DetailItemInfo,
   DetailShopInfo,
-  DetailMore
-  
+  DetailMore,
+  BackTop
 },
 //静态
 props: {
@@ -141,7 +142,18 @@ methods: {
   loadMore(){
     console.log('上拉加载');
     this.$refs.scroller.finishPullUp()
-  }
+  },
+  contentScroll(params){
+    console.log(params.y);
+    if(params.y < -300){
+      this.isShowBackTop = true
+    }else if(params.y > -300){
+      this.isShowBackTop = false
+    }
+  },
+  backTop(){ 
+    this.$refs.scroller.scrollTo(0, 0,900)
+  },
 },
 //请求数据
 created() {
@@ -242,5 +254,4 @@ beforeRouteLeave(to, from, next) {
     top: 43px;/*顶部navbar的高度*/
     z-index: 9;
   }
-
 </style>

@@ -3,7 +3,7 @@
   <p class="detailKey">{{detailInfo.key}}</p>
   
   <div v-for="(item, index) in detailInfo.list" class="imgDiv" id="index">
-    <viewer><img :src="item" alt=""></viewer>
+    <viewer><img :src="item" alt="" @load='detailMoreInm'></viewer>
   </div>
 </div>
 </template>
@@ -35,15 +35,15 @@ computed: {
 },
 //方法表示一个具体的操作，主要书写业务逻辑；
 methods: { 
+  detailMoreInm(){
+    this.$emit('swiperImageLoad2')
+  }
 },
 //请求数据
 created() {
 },
 mounted() {
-  // const ViewerDom = document.getElementById('index');
-  // const viewer = new Viewer(ViewerDom, {
-  //   // 相关配置项,详情见下面
-  // });
+
 }
 }
 </script>
