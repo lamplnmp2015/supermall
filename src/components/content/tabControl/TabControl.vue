@@ -35,8 +35,18 @@ export default {
    },
    activated() {
    },
-  watch: {
-  },
+  // watch: {
+  //   activeIndex:{
+  //     deep:true,
+  //     handler:function(newVal,oldVal){
+  //       console.log("传入图表的新值",newVal)
+  //       if(newVal){
+  //         this.ageData=newVal
+  //         this.initChart(newVal);
+  //       }
+  //     }
+  //   }
+  // },
   created(){
   },
   mounted(){

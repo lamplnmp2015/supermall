@@ -6,7 +6,6 @@
         <div slot="center">购物街</div>
       </nav-bar>
       </div>
-  
       <tab-control @showChange = 'changeGoodsData' 
       :class="{home_tab_control2:isFixed}" v-bind:titles="title"  ref="tabControl1"/>
       <scroll class="home-scroller" ref='scroller' 
@@ -84,26 +83,15 @@ export default {
         showGoodsIndex:'pop',
         tabOffSetTop:0,
         isFixed:false,
-        isLoadShow:false
-        
+        isLoadShow:false,
+        saveY:0,
         // top:0
       }
    },
-   activated() {
-     window.scrollTo(0, this.$top);
-   },
+   
    
    
 created(){
-  let obj = [
-    {
-      'name':'test'
-    }
-  ]
-   
- 
-  const name = obj && obj.name;
-  console.log('name='+name);
   this.getHomeMultidata()
   this.getHomeGoods('pop')
   this.getHomeGoods('sell')
@@ -168,6 +156,7 @@ methods:{
     })
   },
   changeGoodsData(index){
+    
     console.log('index');
     switch(index){
       case 0:
@@ -180,8 +169,12 @@ methods:{
       this.showGoodsIndex = 'sell';
       break;
     }
+     
     this.$refs.tabControl1.activeIndex = index
     this.$refs.tabControl.activeIndex = index
+    console.log('tabchange');
+  
+    
     // if(index == 0){
     //   this.showGoodsIndex = 'pop';
     // }else if(index == 1){
@@ -195,7 +188,7 @@ methods:{
     this.$refs.scroller.scrollTo(0, 0,900)
   },
   contentScroll(params){
-    console.log(params.y);
+    // console.log(params.y);
     this.isFixed = -params.y < this.tabOffSetTop?false:true
     if(params.y < -300){
       
@@ -203,11 +196,14 @@ methods:{
     }else if(params.y > -300){
       this.isShowBackTop = false
      
-    }
+    }   
   },
   
   loadMore(){
-    this.getHomeGoods(this.showGoodsIndex)
+    // this.getHomeGoods(this.showGoodsIndex)
+    this.getHomeGoods('pop')
+    this.getHomeGoods('sell')
+    this.getHomeGoods('new')
   },
   
  
@@ -221,20 +217,32 @@ mounted(){
   this.$bus.$on('itemImgLoad',()=>{
     refresh()
   })
-  // window.addEventListener("scroll", this.handleScroll, true);
-  
 },
 updated() {
   
 },
-beforeDestroy: function () {
-  // window.removeEventListener("scroll", this.handleScroll,true);
-},
-beforeRouteLeave (to, from, next) {
-  // ...
-  this.$top = document.documentElement.scrollTop || document.body.scrollTop;
-  next();
-}
+// beforeDestroy: function () {
+//   // window.removeEventListener("scroll", this.handleScroll,true);
+// },
+// beforeRouteLeave (to, from, next) {
+  
+//  },
+//  beforeRouteEnter (to, from, next) {
+ 
+//  },
+ activated() {
+    //  window.scrollTo(0, this.$top);
+    console.log('设置home滚动位置');
+    console.log(this.saveY);
+    this.$refs.scroller.scrollTo(this.saveY)
+     
+   },
+  deactivated() {
+    console.log(this.saveY);
+    console.log('记录home滚动位置');
+    this.saveY = this.$refs.scroller.getCurrentY()
+    
+  },
 
 }
 </script>

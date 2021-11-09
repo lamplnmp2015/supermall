@@ -21,7 +21,8 @@ const routes =
     meta:{
       title:'首页',
       keepAlive: true
-    }
+    },
+    // component: () => import('../views/home/Home.vue')
   },
   {
     path: '/category',
@@ -48,13 +49,13 @@ const routes =
     }
   },
   {
-    path: '/detail/:iid',
+    path: '/detail',
     component: Detail,
     meta:{
       title:'商品详情',
       keepAlive: false
     },
-    props:true
+    // props:false
   }
 ]
 const router = new VueRouter({
@@ -62,7 +63,7 @@ const router = new VueRouter({
   routes
 })
 router.beforeEach((to,from,next)=>{
-  document.title = to.matched[0].meta.title
+  // document.title = to.matched[0].meta.title
   next()    
   
 })

@@ -12,7 +12,8 @@
 export default {
 data() {
  return{
- 
+   counter:0,
+   imageLength:0
  }
 },
 components: {
@@ -29,6 +30,9 @@ props: {
 },
 //对象内部的属性监听，也叫深度监听
 watch: {
+  detailInfo(){
+    this.imageLength = this.detailInfo.list.length;
+  }
 },
 //属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算。主要当作属性来使用；
 computed: { 
@@ -36,8 +40,17 @@ computed: {
 //方法表示一个具体的操作，主要书写业务逻辑；
 methods: { 
   detailMoreInm(){
-    this.$emit('swiperImageLoad2')
+    if(++this.counter === this.imageLength){
+      console.log('counter='+this.counter);
+      console.log('counter');
+      this.$emit('swiperImageLoad2')
+    }
+    
+  },
+  scrollTo(){
+    
   }
+
 },
 //请求数据
 created() {

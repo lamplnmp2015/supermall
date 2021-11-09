@@ -8,27 +8,28 @@
           <tab-control slot="center"
             ref="tabControl"
             class="home_tab_control" v-bind:titles="title" @showChange ='detailChange'>
-            </tab-control> 
+          </tab-control> 
       </nav-bar>
     </div>
-    
-    <!-- <div class="home-nav-bar">
-      <nav-bar class="nav_bar">
-        <div slot="center">购物街</div>
-      </nav-bar>
-      </div> -->
-    <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore' @scroll='contentScroll'>
+    <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore' @scroll='contentDeatilScroll'>
+      
       <detail-swiper :swiperdata='swiperData' @swiperImageLoad ='swiperImageLoad' ></detail-swiper>
-      <detail-item-info :itemInfo = 'itemInfo' :columns='columns' :service='service'></detail-item-info>
-      <detail-shop-info :shopInfo='shopInfo' @swiperImageLoad2 ='swiperImageLoad2'></detail-shop-info>
-      <detail-more :detailInfo='detailInfo' @swiperImageLoad2 ='swiperImageLoad2'></detail-more>
+      <detail-item-info ref= 'itemInfo':itemInfo = 'itemInfo' :columns='columns' :service='service'></detail-item-info>
+      <detail-shop-info ref='shopInfo' :shopInfo='shopInfo' @swiperImageLoad2 ='swiperImageLoad'></detail-shop-info>
+      <detail-more ref = 'detailMore' :detailInfo='detailInfo' @swiperImageLoad2 ='swiperImageLoad'></detail-more>
+      <detail-param :tables='tables' ref = 'params':itemParams='infoSet'></detail-param>
+      <detail-user-content :comment='comment' ref="comment"></detail-user-content>
+      <div class="goodsListTop">推荐</div>
+      <goods-list v-bind:goodsList='recommend' ref = 'goodsList'></goods-list>
+      <div class="bottom">暂时没有啦~~</div>
     </scroll>
+
     <back-top  v-on:click.native='backTop' v-show='isShowBackTop'/>
   </div>
 </template>
 
 <script>
-import {getDetailData} from 'network/home'
+import {getDetailData,getRecommendData} from 'network/home'
 import NavBar  from 'components/common/NavBar/NavBar';
 import TabControl from 'components/content/tabControl/TabControl';
 import Scroll from 'components/common/Scroll/Scroll'
@@ -36,14 +37,17 @@ import DetailSwiper from './DetailSwiper'
 import DetailItemInfo from 'views/detail/childComps/DetailItemInfo'
 import DetailShopInfo from 'views/detail/childComps/DetailShopInfo'
 import DetailMore from 'views/detail/childComps/DetailMore'
+import DetailUserContent from 'views/detail/childComps/DetailUserContent'
+import DetailParam from 'views/detail/childComps/DetailParam'
 import {debounce}  from 'common/utils'
 import BackTop from 'components/content/backTop/BackTop'
+import GoodsList from 'components/content/goods/GoodsList.vue'; 
 export default {
 data() {
  return{
    title:[
      {name:'商品'},
-     {name:'参考'},
+     {name:'参数'},
      {name:'评论'},
      {name:'推荐'},
    ],
@@ -65,7 +69,20 @@ data() {
    detailInfo:{
 
    },
+   infoSet:{
+
+   },
+   tables:[],
    isShowBackTop :false,
+   comment:{
+
+   },
+   skuInfo:null,
+   recommend:null,
+   fromPath:'',
+   themeTopYs:[],
+   getThemeTopYs:'',
+   imgLoad:''
  }
 },
 props:{
@@ -79,14 +96,21 @@ components: {
   DetailItemInfo,
   DetailShopInfo,
   DetailMore,
-  BackTop
+  BackTop,
+  DetailParam,
+  DetailUserContent,
+  GoodsList
 },
 //静态
 props: {
 },
 //对象内部的属性监听，也叫深度监听
 watch: {
-  
+  '$route'(to, from) {
+      console.log('from')
+      // this.getRecommendData();
+      // this.getDetailData(this.$route.query.iid);
+    },
 },
 //属性的结果会被缓存，除非依赖的响应式属性变化才会重新计算。主要当作属性来使用；
 computed: { 
@@ -99,72 +123,141 @@ methods: {
       this.itemInfo = res.result.itemInfo
       this.shopInfo = res.result.shopInfo
       this.columns = res.result.columns
-      this.detailInfo = res.result.detailInfo.detailImage[0]
-      this.$refs.scroller.refresh
-      // console.log(res.result);
-      console.log(res.result.detailInfo.detailImage[0]);
+      this.infoSet = res.result.itemParams.info.set
+      this.tables = res.result.itemParams.rule.tables
+      this.comment = res.result.rate.list
+      this.skuInfo = res.result.skuInfo.skus
+      this.detailInfo = res.result.detailInfo.detailImage[0] 
+      this.$refs.scroller.refresh()
+      this.$refs.scroller.scrollTo(0,0,0)
+      
+    })
+  },
+  getRecommendData(){
+    getRecommendData().then(res=>{
+      this.recommend = JSON.parse(res).data.list;
+     
     })
   },
   swiperImageLoad(){
-    console.log('1111');
-    
-    this.$refs.scroller.refresh()
-    // const refresh = debounce(this.$refs.scroller.refresh,300)
-    // refresh()
+    this.imgLoad();
+    // this.$refs.scroller.refresh()
+    this.getThemeTopYs()
   },
-  swiperImageLoad2(){
-    console.log('2222');
-    
-    this.$refs.scroller.refresh()
-    console.log(this.$refs.scroller.scroll);
-    // const refresh = debounce(this.$refs.scroller.refresh,300)
-    // refresh()
-  },
+  // swiperImageLoad2(){
+  //   console.log('2222');
+  //   this.$refs.scroller.refresh()
+  //   console.log(this.$refs.scroller.scroll);
+  //   this.getThemeTopYs()
+  //   // const refresh = debounce(this.$refs.scroller.refresh,300)
+  //   // refresh()
+  // },
   detailChange(index){
     switch(index){
       case 0 :
-        console.log('商品');
         break;
       case 1 :
-        console.log('参考');
         break;
       case 2 :
-        console.log('评价');
         break;
       case 0 :
-        console.log('推荐');
         break;
     }
+    this.$refs.scroller.scrollTo(0,-this.themeTopYs[index],100)
   },
   backBefore(){
-    this.$router.go(-1);
+  //  this.$router.push(this.fromPath);
+   this.$router.go(-1);
   },
   loadMore(){
-    console.log('上拉加载');
     this.$refs.scroller.finishPullUp()
   },
-  contentScroll(params){
-    console.log(params.y);
+  tabChange(params){
+    params.y = Math.abs(params.y)
+    var index = 0;
+    for(let i = 0;i< this.themeTopYs.length;i++){
+      if((i< this.themeTopYs.length-1 && params.y >= this.themeTopYs[i] && params.y < this.themeTopYs[i+1]) || (i>=this.themeTopYs.length-1 && params.y >= this.themeTopYs[i])){
+        index = i;
+        console.log('2222222222');
+        console.log(i);
+      }
+    }
+    // if(params.y >= this.themeTopYs[1] && params.y < this.themeTopYs[2]){
+    //   index = 1
+    // }else if(params.y >= this.themeTopYs[2] && params.y < this.themeTopYs[3]){
+    //   index = 2
+    // }else if( params.y >= this.themeTopYs[3]){
+    //   index = 3
+    // }
+
+    console.log('index');
+    console.log(index);
+    if(this.$refs.tabControl.activeIndex != index) this.$refs.tabControl.activeIndex =  index;
+
+
+     console.log(this.$refs.tabControl.activeIndex);
+  },
+  contentDeatilScroll(params){
+    // console.log(params.y);
     if(params.y < -300){
       this.isShowBackTop = true
     }else if(params.y > -300){
       this.isShowBackTop = false
     }
+    this.tabChange(params);
   },
   backTop(){ 
     this.$refs.scroller.scrollTo(0, 0,900)
   },
+ 
 },
 //请求数据
 created() {
+  this.getRecommendData();
+  this.getDetailData(this.$route.query.iid);
   
-  this.getDetailData(this.$route.params.iid);
+  // this.$nextTick(()=>{
+    
+  // });
+  // this.themeTopYs = [];
+  
 },
 mounted() { 
+  const refresh = debounce(this.$refs.scroller.refresh,300)
+  this.$bus.$on('deatilItemImgLoad',()=>{
+    refresh()
+  })
+  this.getThemeTopYs = debounce(()=>{
+      this.themeTopYs.push(0);
+      this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
+  },500)
+  this.imgLoad = debounce(()=>{
+    this.$refs.scroller.refresh()
+  },500)
+ 
+},
+
+beforeRouteUpdate (to, from, next) {
+    next()
+    this.getRecommendData();
+    this.getDetailData(this.$route.query.iid);  
+    
 },
 beforeRouteLeave(to, from, next) {
  from.meta.keepAlive = false;
  next();
+},
+beforeRouteEnter (to, from, next) {
+  // next()
+  next(vm => {
+    vm.fromPath = from.path;
+    if(from.path.indexOf('detail') != -1){
+      vm.fromPath = from.path+'?iid='+vm.$route.query.iid; 
+    }
+  })
+  
 }
 
 
@@ -253,5 +346,15 @@ beforeRouteLeave(to, from, next) {
     position: sticky;
     top: 43px;/*顶部navbar的高度*/
     z-index: 9;
+  }
+  .goodsListTop{
+    width: 95%;
+    margin:10px auto;
+  }
+  .bottom{
+    width: 95%;
+    margin-top: 10px auto;
+    text-align: center;
+    color: rgb(150, 146, 146);
   }
 </style>

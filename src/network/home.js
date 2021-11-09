@@ -21,3 +21,8 @@ export function getDetailData(id){
     }
   })
 }
+export function getRecommendData(){
+  return request({
+    url:'/recommend',
+  })
+}

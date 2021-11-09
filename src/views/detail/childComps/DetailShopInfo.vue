@@ -34,10 +34,10 @@
       <div v-for="(item, index) in shopInfo.score" class="score">
         <span>{{item.name}}</span>
         <span :class="item.score >= 4.9?'scoreRed':'scoreGreen'">{{item.score}}</span>
-        <span v-if="item.score >= 4.9" style="background-color:#FF0000;color:#fff;height:15px;font-size:12px;line-height:15px;border-radius:2px;">
+        <span v-if="item.score >= 4.9" style="background-color:#FF0036;color:#fff;height:15px;font-size:12px;line-height:15px;border-radius:2px;">
           高
         </span>
-        <span v-else style="background-color:#1AE66B;color:#fff;height:15px;font-size:12px;line-height:15px;border-radius:2px;">
+        <span v-else style="background-color:#280;color:#fff;height:15px;font-size:12px;line-height:15px;border-radius:2px;">
           低
         </span>
       </div>
@@ -118,11 +118,11 @@ mounted() {
 }
   .scoreRed{
     width: 30px;
-    color: red;
+    color: #FF0036;
   }
   .scoreGreen{
     width: 30px;
-    color: #1AE66B;
+    color: #280;
   }
   .score{
     height: 22px;

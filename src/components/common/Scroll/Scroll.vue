@@ -52,7 +52,9 @@ methods: {
   refresh() {
     // this.scroll 是创建的的 better-scroll 实例 调用其 refresh 方法进行刷新
     this.scroll.refresh()
-    console.log('refresh');
+  },
+  getCurrentY(){
+    return this.scroll && this.scroll.y
   }
 },
 //请求数据

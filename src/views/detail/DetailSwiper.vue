@@ -1,8 +1,10 @@
 <template>
 <!-- <div> -->
 <swiper class="detail_swiper">
-  <swiper-item  v-for="(item, index) in swiperdata" >
-    <img :src="item" alt="" @load = 'imgLoad'>
+  <swiper-item  v-for="(item, index) in swiperdata">
+    <viewer><img :src="item" alt="" @load = 'imgLoad'></viewer>
+    <!-- <img :src="item" alt="" @load = 'imgLoad'> -->
+    
   </swiper-item>
 </swiper>
 <!-- </div> -->
@@ -60,8 +62,12 @@ mounted() {
 
 <style scoped>
 .detail_swiper{
-  height: 15rem;
+  height: 20rem;
   overflow: hidden;
+}
+.detail_swiper img{
+  width: 100%;
+  /* height: 300px; */
 }
 </style>
 

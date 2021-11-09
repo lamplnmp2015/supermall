@@ -1,14 +1,16 @@
 <template>
+   
     <div class="goods" >
+      
       <goods-list-item v-for="(item,index) in goodsList" class="goods-list-item">
-        <div slot="goods" class="goods-slot" @click="itemClick(item.iid)">
+        <div slot="goods" class="goods-slot" @click="itemClick((item.iid?item.iid:item.item_id))">
           <!-- <a :href="item.link"> -->
-          
-            <img @load='imgLoad' :src="item.show.img" :style="'width:' + item.show.w*0.57 + 'px;height:'+item.show.h*0.65+'px;border-radius:5px;margin:0 auto'"  alt="">
+            <div class="goodsImgDiv">
+              <img @load='imgLoad' :src="item|imageFormat" class="goodsImg"  alt="">
+            </div>
             <span class = 'price' >{{item.orgPrice}}</span>
             <div class="title">{{item.title}}</div>
-          <!-- </a> -->
-          
+          <!-- </a> -->  
         </div>
       </goods-list-item>
     </div>
@@ -18,7 +20,7 @@ import GoodsListItem from './GoodsListItem';
 export default {
   props:{
     goodsList:{
-      type:Array,
+      // type:Array,
       default(){
         return []
       }
@@ -34,25 +36,50 @@ export default {
      'goods-list-item':GoodsListItem
    },
    computed: {
+     showImage(){
+       return item.image || item.show.img
+     }
    },
    activated() {
    },
   watch: {
   },
   created(){
+    console.log('deatail');
     console.log(this.goodsList);
   },
   mounted(){
   },
   methods:{
     imgLoad(){
-      this.$bus.$emit('itemImgLoad')
+      // console.log('this.$route.path');
+      // console.log(this.$route.path.indexOf('home'));
+      if(this.$route.path.indexOf('home')){
+        console.log('home');
+        // this.$bus.$emit('itemImgLoad')
+      }else if(this.$route.path.indexOf('deatail')){
+        this.$bus.$emit('detailItemImgLoad')
+         console.log('detail');
+      }
+      
     },
     itemClick(iid){
-      console.log('跳转到详情页');
-      console.log(iid);
-      // this.$router.push('/detail?iid='+iid)
-      this.$router.push('/detail/'+iid)
+      console.log('跳转到详情页')
+      // this.$router.push('/detail/'+iid)
+      this.$router.push({
+        path:'/detail',
+        query:{
+          iid:iid
+        }
+      })
+    }
+  },
+  filters: {
+    imageFormat: (item)=> {
+        return item.image || item.show.img
+    },
+    idFromat:(item)=>{
+        return item.iid || item.show_id
     }
   }
 
@@ -66,6 +93,10 @@ export default {
    display: flex;
    flex-wrap:wrap;
    justify-content: space-around;
+ }
+ .goodsImg{
+   width: 97%;
+   border-radius: 5px;
  }
  .goods-slot{
    width:100%;
@@ -96,7 +127,7 @@ export default {
   text-overflow: clip;
   white-space: wrap;
  }
- 
+
   
 
   
