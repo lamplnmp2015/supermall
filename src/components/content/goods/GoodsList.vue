@@ -69,7 +69,8 @@ export default {
       this.$router.push({
         path:'/detail',
         query:{
-          iid:iid
+          iid:iid,
+          random:Math.random()*10
         }
       })
     }

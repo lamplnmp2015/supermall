@@ -107,7 +107,6 @@ props: {
 //对象内部的属性监听，也叫深度监听
 watch: {
   '$route'(to, from) {
-      console.log('from')
       // this.getRecommendData();
       // this.getDetailData(this.$route.query.iid);
     },
@@ -140,6 +139,7 @@ methods: {
     })
   },
   swiperImageLoad(){
+    console.log('7848484848484');
     this.imgLoad();
     // this.$refs.scroller.refresh()
     this.getThemeTopYs()
@@ -178,10 +178,11 @@ methods: {
     for(let i = 0;i< this.themeTopYs.length;i++){
       if((i< this.themeTopYs.length-1 && params.y >= this.themeTopYs[i] && params.y < this.themeTopYs[i+1]) || (i>=this.themeTopYs.length-1 && params.y >= this.themeTopYs[i])){
         index = i;
-        console.log('2222222222');
-        console.log(i);
       }
     }
+    console.log('index');
+    console.log(index);
+    console.log(this.themeTopYs);
     // if(params.y >= this.themeTopYs[1] && params.y < this.themeTopYs[2]){
     //   index = 1
     // }else if(params.y >= this.themeTopYs[2] && params.y < this.themeTopYs[3]){
@@ -189,13 +190,7 @@ methods: {
     // }else if( params.y >= this.themeTopYs[3]){
     //   index = 3
     // }
-
-    console.log('index');
-    console.log(index);
     if(this.$refs.tabControl.activeIndex != index) this.$refs.tabControl.activeIndex =  index;
-
-
-     console.log(this.$refs.tabControl.activeIndex);
   },
   contentDeatilScroll(params){
     // console.log(params.y);
@@ -213,6 +208,7 @@ methods: {
 },
 //请求数据
 created() {
+  
   this.getRecommendData();
   this.getDetailData(this.$route.query.iid);
   
@@ -223,20 +219,24 @@ created() {
   
 },
 mounted() { 
+  
   const refresh = debounce(this.$refs.scroller.refresh,300)
   this.$bus.$on('deatilItemImgLoad',()=>{
     refresh()
   })
   this.getThemeTopYs = debounce(()=>{
+    // if(this.themeTopYs.length < 1){
+      this.themeTopYs = [];
       this.themeTopYs.push(0);
       this.themeTopYs.push(this.$refs.params.$el.offsetTop);
       this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
       this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
+    // }  
   },500)
   this.imgLoad = debounce(()=>{
     this.$refs.scroller.refresh()
   },500)
- 
+  
 },
 
 beforeRouteUpdate (to, from, next) {
@@ -246,19 +246,26 @@ beforeRouteUpdate (to, from, next) {
     
 },
 beforeRouteLeave(to, from, next) {
- from.meta.keepAlive = false;
+//  from.meta.keepAlive = false;
  next();
 },
 beforeRouteEnter (to, from, next) {
   // next()
+  
   next(vm => {
     vm.fromPath = from.path;
+    console.log();
     if(from.path.indexOf('detail') != -1){
       vm.fromPath = from.path+'?iid='+vm.$route.query.iid; 
+      // if($route.query.iid == )
     }
   })
   
-}
+},
+activated() {
+ console.log('activated11111111111111111111111111');
+  this.themeTopYs = []
+},
 
 
 }

@@ -101,9 +101,6 @@ created(){
 methods:{
   imageLoad(){
     this.tabOffSetTop = this.$refs.tabControl.$el.offsetTop
-
-    console.log(this.$refs.tabControl.$el.offsetTop);
-
   },
   handleScroll() {
     // this.top = this.$refs.scroll_top.getBoundingClientRect().top;
@@ -156,8 +153,6 @@ methods:{
     })
   },
   changeGoodsData(index){
-    
-    console.log('index');
     switch(index){
       case 0:
       this.showGoodsIndex = 'pop';
@@ -168,13 +163,9 @@ methods:{
       case 2:
       this.showGoodsIndex = 'sell';
       break;
-    }
-     
+    }  
     this.$refs.tabControl1.activeIndex = index
     this.$refs.tabControl.activeIndex = index
-    console.log('tabchange');
-  
-    
     // if(index == 0){
     //   this.showGoodsIndex = 'pop';
     // }else if(index == 1){
@@ -221,28 +212,12 @@ mounted(){
 updated() {
   
 },
-// beforeDestroy: function () {
-//   // window.removeEventListener("scroll", this.handleScroll,true);
-// },
-// beforeRouteLeave (to, from, next) {
-  
-//  },
-//  beforeRouteEnter (to, from, next) {
- 
-//  },
- activated() {
-    //  window.scrollTo(0, this.$top);
-    console.log('设置home滚动位置');
-    console.log(this.saveY);
-    this.$refs.scroller.scrollTo(this.saveY)
-     
-   },
-  deactivated() {
-    console.log(this.saveY);
-    console.log('记录home滚动位置');
-    this.saveY = this.$refs.scroller.getCurrentY()
-    
+activated() {
+  this.$refs.scroller.scrollTo(this.saveY)  
   },
+deactivated() {
+  this.saveY = this.$refs.scroller.getCurrentY()   
+},
 
 }
 </script>

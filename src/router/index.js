@@ -53,7 +53,7 @@ const routes =
     component: Detail,
     meta:{
       title:'商品详情',
-      keepAlive: false
+      keepAlive: true
     },
     // props:false
   }
