@@ -1,5 +1,9 @@
 <template>
+
   <div id ='detail'>
+    <div class="hover"  v-if="isLoadShow"></div>
+    <div class='loader' v-if="isLoadShow"></div>
+    <div class="joinSuccess" v-if="isJoinSuccess">加入购物车成功</div>
     <div class="detail-nav-bar">
       <nav-bar class="nav_bar">
           <div class="nav_left" slot="left" @click="backBefore">
@@ -11,19 +15,19 @@
           </tab-control> 
       </nav-bar>
     </div>
-    <scroll class="home-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore' @scroll='contentDeatilScroll'>
+    <scroll class="detail-scroller" ref='scroller' v-bind:probe-type='3' @pullingUp = 'loadMore' @scroll='contentDeatilScroll'>
       
       <detail-swiper :swiperdata='swiperData' @swiperImageLoad ='swiperImageLoad' ></detail-swiper>
       <detail-item-info ref= 'itemInfo':itemInfo = 'itemInfo' :columns='columns' :service='service'></detail-item-info>
       <detail-shop-info ref='shopInfo' :shopInfo='shopInfo' @swiperImageLoad2 ='swiperImageLoad'></detail-shop-info>
       <detail-more ref = 'detailMore' :detailInfo='detailInfo' @swiperImageLoad2 ='swiperImageLoad'></detail-more>
-      <detail-param :tables='tables' ref = 'params':itemParams='infoSet'></detail-param>
+      <detail-param :tables='tables' ref = 'detailParams':itemParams='infoSet'></detail-param>
       <detail-user-content :comment='comment' ref="comment"></detail-user-content>
       <div class="goodsListTop">推荐</div>
       <goods-list v-bind:goodsList='recommend' ref = 'goodsList'></goods-list>
       <div class="bottom">暂时没有啦~~</div>
     </scroll>
-
+    <detail-bottom-nav @joinCart = 'joinCart'></detail-bottom-nav>
     <back-top  v-on:click.native='backTop' v-show='isShowBackTop'/>
   </div>
 </template>
@@ -39,6 +43,7 @@ import DetailShopInfo from 'views/detail/childComps/DetailShopInfo'
 import DetailMore from 'views/detail/childComps/DetailMore'
 import DetailUserContent from 'views/detail/childComps/DetailUserContent'
 import DetailParam from 'views/detail/childComps/DetailParam'
+import DetailBottomNav from 'views/detail/childComps/DetailBottomNav'
 import {debounce}  from 'common/utils'
 import BackTop from 'components/content/backTop/BackTop'
 import GoodsList from 'components/content/goods/GoodsList.vue'; 
@@ -82,7 +87,10 @@ data() {
    fromPath:'',
    themeTopYs:[],
    getThemeTopYs:'',
-   imgLoad:''
+   imgLoad:'',
+   isLoadShow:true,
+   isJoinSuccess:false,
+   timer:null
  }
 },
 props:{
@@ -99,7 +107,8 @@ components: {
   BackTop,
   DetailParam,
   DetailUserContent,
-  GoodsList
+  GoodsList,
+  DetailBottomNav
 },
 //静态
 props: {
@@ -107,6 +116,7 @@ props: {
 //对象内部的属性监听，也叫深度监听
 watch: {
   '$route'(to, from) {
+    console.log(from);
       // this.getRecommendData();
       // this.getDetailData(this.$route.query.iid);
     },
@@ -118,6 +128,10 @@ computed: {
 methods: { 
   getDetailData(id){
     getDetailData(id).then(res=>{
+      if(res.result == null){
+        this.$router.go(-1);
+        return false;
+      }
       this.swiperData = res.result.itemInfo.topImages
       this.itemInfo = res.result.itemInfo
       this.shopInfo = res.result.shopInfo
@@ -129,19 +143,20 @@ methods: {
       this.detailInfo = res.result.detailInfo.detailImage[0] 
       this.$refs.scroller.refresh()
       this.$refs.scroller.scrollTo(0,0,0)
-      
+    
     })
   },
   getRecommendData(){
+    this.isLoadShow = true;
     getRecommendData().then(res=>{
       this.recommend = JSON.parse(res).data.list;
-     
+      this.isLoadShow = false;
+      this.$refs.scroller.refresh()
     })
   },
   swiperImageLoad(){
-    console.log('7848484848484');
-    this.imgLoad();
-    // this.$refs.scroller.refresh()
+    // this.imgLoad();
+    this.$refs.scroller.refresh()
     this.getThemeTopYs()
   },
   // swiperImageLoad2(){
@@ -166,8 +181,10 @@ methods: {
     this.$refs.scroller.scrollTo(0,-this.themeTopYs[index],100)
   },
   backBefore(){
-  //  this.$router.push(this.fromPath);
-   this.$router.go(-1);
+    console.log('2344');
+    console.log(this.$router);
+   this.$router.push(this.fromPath);
+  //  this.$router.go(-1);
   },
   loadMore(){
     this.$refs.scroller.finishPullUp()
@@ -204,34 +221,51 @@ methods: {
   backTop(){ 
     this.$refs.scroller.scrollTo(0, 0,900)
   },
+  joinCart(){
+    // this.isJoinSuccess = true;
+    console.log('2222');
+    let product = {}
+    product.image = this.swiperData[0];
+    product.title = this.itemInfo.title;
+    product.desc = this.itemInfo.desc;
+    product.price = this.itemInfo.price;
+    product.iid = this.$route.query.iid;
+    product.isChecked = true;
+    // product.count = 1;
+    this.$store.dispatch('addCart', product).then((res)=>{
+      // this.isJoinSuccess = true
+      // if(this.timer) clearTimeout(this.timer)
+      // this.timer = setTimeout(()=>{
+      //   this.isJoinSuccess = false;
+      // },700)
+      // console.log('3333');
+      console.log(this.$myToast);
+     this.$myToast.show('加入购物车成功',500)
+    })
+    console.log(this.$store.state.cartInfo);
+    
+  }
  
 },
 //请求数据
 created() {
-  
+  this.iid = this.$route.query.iid;
   this.getRecommendData();
-  this.getDetailData(this.$route.query.iid);
-  
-  // this.$nextTick(()=>{
-    
-  // });
-  // this.themeTopYs = [];
-  
+  this.getDetailData(this.iid); 
+                                     
 },
 mounted() { 
-  
   const refresh = debounce(this.$refs.scroller.refresh,300)
   this.$bus.$on('deatilItemImgLoad',()=>{
     refresh()
   })
   this.getThemeTopYs = debounce(()=>{
-    // if(this.themeTopYs.length < 1){
+      //每次调用都将themeTopYs重置为空数组，解决二次进入当前页面数据不准确
       this.themeTopYs = [];
       this.themeTopYs.push(0);
-      this.themeTopYs.push(this.$refs.params.$el.offsetTop);
+      this.themeTopYs.push(this.$refs.detailParams.$el.offsetTop);
       this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
       this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
-    // }  
   },500)
   this.imgLoad = debounce(()=>{
     this.$refs.scroller.refresh()
@@ -240,34 +274,34 @@ mounted() {
 },
 
 beforeRouteUpdate (to, from, next) {
+  next(vm => {
+    vm.fromPath = from.path;
+    console.log('fromPath');``
+    console.log(from.path);
+    if(from.path.indexOf('detail') != -1){
+      vm.fromPath = from.path+'?iid='+vm.$route.query.iid; 
+    }
+  })
     next()
     this.getRecommendData();
     this.getDetailData(this.$route.query.iid);  
     
 },
 beforeRouteLeave(to, from, next) {
-//  from.meta.keepAlive = false;
+ from.meta.keepAlive = false;
  next();
 },
 beforeRouteEnter (to, from, next) {
-  // next()
-  
   next(vm => {
     vm.fromPath = from.path;
-    console.log();
+    console.log('fromPath');``
+    console.log(from.path);
     if(from.path.indexOf('detail') != -1){
       vm.fromPath = from.path+'?iid='+vm.$route.query.iid; 
-      // if($route.query.iid == )
     }
   })
   
 },
-activated() {
- console.log('activated11111111111111111111111111');
-  this.themeTopYs = []
-},
-
-
 }
 </script>
 
@@ -299,10 +333,10 @@ activated() {
     display: flex;
     background-color: #fff;
   }
-  .home-scroller{
+  .detail-scroller{
     /*height:300px;*/
     /* overflow: scroll-y; */
-    height: calc(100% - 43px);
+    height: calc(100% - 91px);
     position: absolute;
     top: 43px;
     bottom: 0px;
@@ -363,5 +397,47 @@ activated() {
     margin-top: 10px auto;
     text-align: center;
     color: rgb(150, 146, 146);
+  }
+  .loader{
+    border:6px solid #f3f3f3;
+    border-radius:50%;
+    border-top:6px solid #A2A2A2;
+    width:50px;
+    height:50px;
+    /* animation-name:load; */
+    animation:load 2s linear infinite;
+    z-index: 999;
+    position: fixed;
+    top: 50%;
+    right: 40%;
+  }
+  @keyframes load{
+      0%{
+          transform: rotate(0deg);
+      }
+      100%{
+          transform:rotate(360deg);
+      }
+  }
+  .hover{
+    width: 100%;
+    height: 100vh;
+    background-color: rgba(255,255,255,0.4);
+    position: fixed;
+    z-index: 999;
+  }
+  .joinSuccess{
+    width: 150px;
+    height: 30px;
+    background-color: rgba(73, 68, 68, 0.6);
+    color: #fff;
+    text-align: center;
+    line-height: 30px;
+    border-radius: 5px;
+    position: fixed;
+    z-index: 998;
+    top: 50%;
+    left:50%;
+    transform:translate(-50%,-50%);
   }
 </style>

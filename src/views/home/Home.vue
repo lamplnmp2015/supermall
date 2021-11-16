@@ -237,7 +237,6 @@ deactivated() {
     right:0;
     top: 0;
     z-index: 9;
-
   }
   .fixed{
     position: fixed;
@@ -265,7 +264,7 @@ deactivated() {
   .home-scroller{
     /*height:300px;*/
     /* overflow: scroll-y; */
-    height: calc(100%-89px);
+    height: calc(100% - 89px);
     position: absolute;
     top: 44px;
     bottom: 49px;
@@ -279,20 +278,20 @@ deactivated() {
     position: fixed;
     top: 0;
     overflow: hidden;
-    
+    font-weight: 700;
   }
-    .loader{
-      border:6px solid #f3f3f3;
-      border-radius:50%;
-      border-top:6px solid #A2A2A2;
-      width:50px;
-      height:50px;
-      /* animation-name:load; */
-      animation:load 2s linear infinite;
-      z-index: 999;
-      position: fixed;
-      top: 50%;
-      right: 40%;
+  .loader{
+    border:6px solid #f3f3f3;
+    border-radius:50%;
+    border-top:6px solid #A2A2A2;
+    width:50px;
+    height:50px;
+    /* animation-name:load; */
+    animation:load 2s linear infinite;
+    z-index: 999;
+    position: fixed;
+    top: 50%;
+    right: 40%;
   }
   @keyframes load{
       0%{

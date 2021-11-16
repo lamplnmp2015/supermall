@@ -62,10 +62,9 @@ created() {
 },
 mounted() {
   this.scroll = new BScroll(this.$refs.wrapper,{
-     click:true,
-     scrollX:true,
-     probeType:this.probeType,
-    //  pullUpLoad:this.pullUpLoad
+    click:true,
+    scrollX:true,
+    probeType:this.probeType,
     pullUpLoad:{
       threshold:30
     }
@@ -91,22 +90,5 @@ mounted() {
 </script>
 
 <style scoped>
- .wrapper{
-   height: 100%;
-   overflow: hidden;
-   flex: 1;
- }
- .content{
-   /* height: calc(100%-100px); */
-   /* height: 1000px; */
-   /* height: 100%; */
-  
 
-    /* position: absolute;
-    top: 10px;
-    bottom: 49px;
-    right: 0;
-    left: 0; */
-    
- }
 </style>

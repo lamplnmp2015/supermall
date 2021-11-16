@@ -1,62 +1,15 @@
 <template>
+    
     <div class="wrapper" ref="aaa">
-      <ul class="content">
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-        <li>測試</li>
-      </ul>
+      <nav-bar class="nav_bar">
+        <div slot="center">分类</div>
+      </nav-bar>
+      
     </div>
 </template>
 <script>
 import BScroll from 'better-scroll';
+import NavBar from 'components/common/NavBar/NavBar';
 export default {
    data() {
       return {
@@ -66,6 +19,9 @@ export default {
    activated() {
    },
  watch: {
+},
+components:{
+  NavBar
 },
 created(){
 },
@@ -82,9 +38,10 @@ methods:{
 </script>
 <style scoped>
   .wrapper{
-    height: 150px;
-    background-color: brown;
-    overflow: scroll;
+  
     
+  }
+  .nav_bar{
+    font-weight: 700;
   }
 </style>

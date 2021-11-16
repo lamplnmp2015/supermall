@@ -8,6 +8,9 @@ module.exports = {
         'network':'@/network',
         'views':'@/views'
       }
+    },
+    devServer:{
+      historyApiFallback: true
     }
   }
 }
