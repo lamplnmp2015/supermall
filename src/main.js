@@ -5,11 +5,13 @@ import Viewer from 'v-viewer'
 import store from './store'
 import 'viewerjs/dist/viewer.css'
 import toast from 'components/common/toast'
+import fastclick from 'fastclick'
 Vue.use(toast);
 Vue.use(Viewer);
 // Viewer.setDefaults({
 //   Options: { "inline": true, "button": true, "navbar": true, "title": true, "toolbar": true, "tooltip": true, "movable": true, "zoomable": true, "rotatable": true, "scalable": true, "transition": true, "fullscreen": true, "keyboard": true, "url": "data-source" }
 // });
+fastclick.attach(document.body)
 Viewer.setDefaults({
   'inline': false, //启用inline模式
   'button': true, //显示右上角关闭按钮
