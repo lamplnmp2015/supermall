@@ -3,7 +3,7 @@
   <p class="detailKey">{{detailInfo.key}}</p>
   
   <div v-for="(item, index) in detailInfo.list" class="imgDiv" id="index">
-    <viewer><img :src="item" alt="" @load='detailMoreInm'></viewer>
+    <viewer><img v-lazy="item" alt="" @load='detailMoreInm'></viewer>
   </div>
 </div>
 </template>

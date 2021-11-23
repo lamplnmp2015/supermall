@@ -26,3 +26,26 @@ export function getRecommendData(){
     url:'/recommend',
   })
 }
+export function getCartLeftTabData(){
+  return request({
+    url:'/category',
+  })
+}
+export function getFirstCate(id){
+  return request({
+    url:'/subcategory',
+    params:{
+      maitKey:id
+    }
+  })
+}
+getSecondData
+export function getSecondData(id,type){
+  return request({
+    url:'/subcategorydetail',
+    params:{
+      miniWallkey:id,
+      type:type
+    }
+  })
+}

@@ -1,7 +1,7 @@
 <template>
     <div class="tab-control"  >
       <div class="tab-control-item" v-for="(item,index) in titles" >
-          <span v-bind:class='{span_active:index==activeIndex}'   v-on:click="spanClick(index)">
+          <span v-bind:class='{span_active:index===activeIndexs}'   v-on:click="spanClick(index)">
             {{item.name}}
           </span>
       </div>
@@ -12,7 +12,7 @@
 export default {
    data() {
       return {
-        activeIndex:0
+        activeIndexs:0
       }
    },
    props:{
@@ -26,27 +26,12 @@ export default {
    components: {
    },
    computed: {
-    //  isActive(){
-    //    return (index)=>{
-    //       return this.activeIndex = index?'span-active':'';
-    //    } 
-    //  }
+  
   
    },
    activated() {
    },
-  // watch: {
-  //   activeIndex:{
-  //     deep:true,
-  //     handler:function(newVal,oldVal){
-  //       console.log("传入图表的新值",newVal)
-  //       if(newVal){
-  //         this.ageData=newVal
-  //         this.initChart(newVal);
-  //       }
-  //     }
-  //   }
-  // },
+
   created(){
   },
   mounted(){
@@ -54,8 +39,10 @@ export default {
 
   methods:{
     spanClick(index){
-      this.activeIndex = index
-     this.$emit('showChange', this.activeIndex);
+      this.activeIndexs = index
+      console.log(index);
+      console.log(this.activeIndex);
+      this.$emit('showChange', this.activeIndexs);
     }
   }
 

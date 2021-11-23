@@ -5,7 +5,7 @@
       </nav-bar>
       <div class="countInput" v-if="isInputShow">
         <div class="inputTop">请输入内容</div>
-        <div  class="inputMiddle"><input type="number" :value="count" ref="input" @input='inputValue'></div>
+        <div  class="inputMiddle"><input type="text" :value="count" ref="input" @input='inputValue'></div>
         <div  class="inputBottom">
           <span @click="cancelInput()">取消</span>
           <span @click="confirmInput()">确定</span>
@@ -27,7 +27,7 @@ export default {
    data() {
       return {
         cartData:[],
-        count:0,
+        count:1,
         isInputShow:false,
         itemIndex:0
       }
@@ -57,14 +57,20 @@ methods:{
     console.log(this.$refs.scroller);
   },
   inputValue(info){
-    // this.count = info.data
-    
+    console.log(info.data);
   },
   cancelInput(){
     this.isInputShow = false
   },
   confirmInput(){
+    var pattern = /^\+?[1-9][0-9]*$/;
+    console.log('2334');
+    console.log(this.$refs.input.value);
+    console.log(pattern.test(this.$refs.input.value));
+    if(!pattern.test(this.$refs.input.value)){ this.$myToast.show('请填写大于0的纯数字',2000); return false;}
+    // console.log(inputContent);
     console.log(this.cartList[this.itemIndex]);
+    this.$myToast.show('修改成功');
     this.cartList[this.itemIndex].count = Number(this.$refs.input.value);
     this.isInputShow = false;
   },
@@ -73,8 +79,11 @@ methods:{
     this.itemIndex = index;
     console.log('index11');
     console.log(index);
-    console.log(this.$refs);
+    console.log(this.$refs.input);
     this.count = this.cartList[index].count;
+    this.$nextTick((x)=>{ //正确写法
+      this.$refs.input.focus();
+    })
   }
 },
 computed:{
@@ -184,7 +193,7 @@ computed:{
   top: 50%;
   left:50%;
   transform:translate(-50%,-50%);
-  background: red;
+  background: #eee;
   padding: 10px 10px 10px 10px;
   /* text-align: center; */
   display: flex;
@@ -202,7 +211,7 @@ computed:{
   /* align-items: center;  */
 }
 .inputMiddle{
-  border-bottom: 1px solid var(--color-tint);
+  border-bottom: 1px solid rgb(184, 184, 184);
 }
 .inputMiddle input{
   background:none;  

@@ -24,7 +24,7 @@
       <detail-param :tables='tables' ref = 'detailParams':itemParams='infoSet'></detail-param>
       <detail-user-content :comment='comment' ref="comment"></detail-user-content>
       <div class="goodsListTop">推荐</div>
-      <goods-list v-bind:goodsList='recommend' ref = 'goodsList'></goods-list>
+      <goods-list v-bind:goodsList='recommend' @lastLoad='lastLoad' ref = 'goodsList'></goods-list>
       <div class="bottom">暂时没有啦~~</div>
     </scroll>
     <detail-bottom-nav @joinCart = 'joinCart'></detail-bottom-nav>
@@ -83,7 +83,7 @@ data() {
 
    },
    skuInfo:null,
-   recommend:null,
+   recommend:[],
    fromPath:'',
    themeTopYs:[],
    getThemeTopYs:'',
@@ -146,10 +146,16 @@ methods: {
     
     })
   },
+  lastLoad(){
+    this.$refs.scroller.refresh()
+    this.getThemeTopYs()
+  },
   getRecommendData(){
     this.isLoadShow = true;
     getRecommendData().then(res=>{
       this.recommend = JSON.parse(res).data.list;
+      console.log('recommend');
+      console.log(this.recommend);
       this.isLoadShow = false;
       this.$refs.scroller.refresh()
     })
@@ -157,7 +163,8 @@ methods: {
   swiperImageLoad(){
     // this.imgLoad();
     this.$refs.scroller.refresh()
-    this.getThemeTopYs()
+    
+   
   },
   // swiperImageLoad2(){
   //   console.log('2222');
@@ -197,9 +204,7 @@ methods: {
         index = i;
       }
     }
-    console.log('index');
-    console.log(index);
-    console.log(this.themeTopYs);
+    
     // if(params.y >= this.themeTopYs[1] && params.y < this.themeTopYs[2]){
     //   index = 1
     // }else if(params.y >= this.themeTopYs[2] && params.y < this.themeTopYs[3]){
@@ -260,16 +265,18 @@ mounted() {
     refresh()
   })
   this.getThemeTopYs = debounce(()=>{
-      //每次调用都将themeTopYs重置为空数组，解决二次进入当前页面数据不准确
-      this.themeTopYs = [];
-      this.themeTopYs.push(0);
-      this.themeTopYs.push(this.$refs.detailParams.$el.offsetTop);
-      this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
-      this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
-  },500)
+        //每次调用都将themeTopYs重置为空数组，解决二次进入当前页面数据不准确
+        this.themeTopYs = [];
+        this.themeTopYs.push(0);
+        this.themeTopYs.push(this.$refs.detailParams.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
+        this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
+    },300)
   this.imgLoad = debounce(()=>{
     this.$refs.scroller.refresh()
   },500)
+  
+  
   
 },
 

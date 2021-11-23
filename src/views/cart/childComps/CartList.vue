@@ -15,7 +15,7 @@
             <div class="bottom-left">{{item.price}}</div>  
             <!-- <div class="bottom-right">x{{item.count}}</div>   -->
             <div class="bottom-right">
-              <div class="button button1" type="button" @click.stop="countDesr(index)">-</div>
+              <div class="button button1" type="button"  @click.stop="countDesr(index)">-</div>
               <div class="buttonCount" @click.stop='showInput(index)'>{{item.count}}</div>
               <div class="button button2" type="button" @click.stop="countInsr(index)">+</div>  
             </div>  
@@ -80,7 +80,7 @@ methods: {
       })
   },
   countDesr(index){
-    if(this.cartList[index].count === 1) return false;
+    if(this.cartList[index].count <= 1) return false;
     this.cartList[index].count--
   },
   countInsr(index){

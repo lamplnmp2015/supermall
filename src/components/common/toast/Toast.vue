@@ -46,7 +46,7 @@ mounted() {
 
 <style scoped>
   .toast{
-    width: 150px;
+    /* width: 150px; */
     height: 30px;
     background-color: rgba(73, 68, 68, 0.6);
     color: #fff;
@@ -54,7 +54,8 @@ mounted() {
     line-height: 30px;
     border-radius: 5px;
     position: fixed;
-    z-index: 998;
+    z-index: 1000;
+    padding: 0px 5px 0px 5px;
     top: 50%;
     left:50%;
     transform:translate(-50%,-50%);

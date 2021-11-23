@@ -180,6 +180,7 @@ methods:{
   },
   contentScroll(params){
     // console.log(params.y);
+    console.log(params.y);
     this.isFixed = -params.y < this.tabOffSetTop?false:true
     if(params.y < -300){
       
@@ -249,14 +250,14 @@ deactivated() {
     /*两个要混合使用*/
     width: 100%;
     position: sticky;
-    top: 43px;/*顶部navbar的高度*/
+    top: 44px;/*顶部navbar的高度*/
     z-index: 9;
   }
   .home_tab_control2{
     overflow: hidden;
     width: 100%;
     position: fixed;
-    top: 43px;
+    top: 44px;
     z-index:9;
     clear: both;
   }

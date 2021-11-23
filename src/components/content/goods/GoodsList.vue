@@ -1,18 +1,21 @@
 <template>
    
     <div class="goods" >
-      
+      <waterfall :col="2"  :data="goodsList">
       <goods-list-item v-for="(item,index) in goodsList" class="goods-list-item">
+        
         <div slot="goods" class="goods-slot" @click="itemClick((item.iid?item.iid:item.item_id))">
           <!-- <a :href="item.link"> -->
             <div class="goodsImgDiv">
-              <img @load='imgLoad' :src="item|imageFormat" class="goodsImg"  alt="">
+              <img @load='imgLoad' v-lazy="showImage(item)" class="goodsImg"  alt="">
             </div>
             <span class = 'price' >{{item.orgPrice}}</span>
             <div class="title">{{item.title}}</div>
           <!-- </a> -->  
         </div>
+        
       </goods-list-item>
+      </waterfall>
     </div>
 </template>
 <script>
@@ -29,7 +32,8 @@ export default {
    data() {
      
       return {
-        itemGoodsIid:0
+        itemGoodsIid:0,
+        
       }
    },
    components: {
@@ -37,7 +41,10 @@ export default {
    },
    computed: {
      showImage(){
-       return item.image || item.show.img
+       return (item)=>{
+         return item.image || item.show.img
+       }
+       
      }
    },
    activated() {
@@ -47,6 +54,7 @@ export default {
   created(){
     console.log('deatail');
     console.log(this.goodsList);
+    
   },
   mounted(){
   },
@@ -61,7 +69,7 @@ export default {
         this.$bus.$emit('detailItemImgLoad')
          console.log('detail');
       }
-      
+      this.$emit('lastLoad')
     },
     itemClick(iid){
       console.log('跳转到详情页')
@@ -106,7 +114,7 @@ export default {
    /* text-align: center; */
  }
  .goods-list-item{
-   width: 50%;
+   /* width: 50%; */
    text-align: center;
    }
   .price{

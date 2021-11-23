@@ -4,14 +4,34 @@ import router from './router'
 import Viewer from 'v-viewer'
 import store from './store'
 import 'viewerjs/dist/viewer.css'
-import toast from 'components/common/toast'
-import fastclick from 'fastclick'
-Vue.use(toast);
+import Toast from 'components/common/toast'
+import FastClick from 'fastclick'
+import VueLazyLoad from 'vue-lazyload'
+import waterfall from 'vue-waterfall2'
+Vue.use(waterfall)
+Vue.use(VueLazyLoad,{
+  loading:require('./assets/img/common/placeholder.png')
+})
+Vue.use(VueLazyLoad,{
+  preload:1.3,
+  error:'dist/error.png',
+  loading:'dist/loading.gif',
+  attempt:1,
+  filter:{
+    imageFormat: (listener, options)=> {
+      console.log('filter');
+      console.log(listener);
+      console.log(options);
+        // return item.image || item.show.img
+    },
+  }
+})
+Vue.use(Toast);
 Vue.use(Viewer);
 // Viewer.setDefaults({
 //   Options: { "inline": true, "button": true, "navbar": true, "title": true, "toolbar": true, "tooltip": true, "movable": true, "zoomable": true, "rotatable": true, "scalable": true, "transition": true, "fullscreen": true, "keyboard": true, "url": "data-source" }
 // });
-fastclick.attach(document.body)
+FastClick.attach(document.body)
 Viewer.setDefaults({
   'inline': false, //启用inline模式
   'button': true, //显示右上角关闭按钮
