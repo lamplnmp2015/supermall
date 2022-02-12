@@ -108,16 +108,16 @@ methods:{
     let cilentHeight = document.documentElement.clientHeight-93
     this.$refs.scroller1.$el.style.height = cilentHeight+'px'
     this.$refs.scroller.$el.style.height = cilentHeight+'px'
-     console.log('height');
+    //  console.log('height');
     // console.log(cilentHeight);
-    console.log(this.$refs.scroller1.$el.style.height);
+    // console.log(this.$refs.scroller1.$el.style.height);
   },
   imgLoad(){
     this.$refs.scroller1.refresh() 
     this.tabOffSetTop = this.$refs.tabControl1.$el.offsetTop
   },
   liClick(index){
-    console.log(index);
+    // console.log(index);
     this.currentIndex = index
     this.getRightData()
     this.getSubDetail()
@@ -138,7 +138,7 @@ methods:{
       }
       arr[0].isChecked = true
       this.leftTab = arr
-      console.log(this.leftTab );
+      // console.log(this.leftTab );
       // this.leftTab[0].isChecked = true
       this.$nextTick(()=> {
         this.$refs.scroller.refresh() 
@@ -151,8 +151,8 @@ methods:{
     getFirstCate(this.leftTab[this.currentIndex].maitKey).then((ress)=>{
       ress = JSON.parse(ress)
       this.firstSub = ress.data.list
-      console.log('121');
-      console.log(ress.data);
+      // console.log('121');
+      // console.log(ress.data);
       
       this.$nextTick(()=> {
         this.$refs.scroller1.refresh() 
@@ -198,9 +198,7 @@ methods:{
     })
   },
   contentScroll(params){
-    console.log(params.y);
-    console.log(this.tabOffSetTop);
-    console.log('qqqqqqqq');
+    //  
     this.isFixed = -params.y < this.tabOffSetTop?false:true
     if(params.y < -300){
       

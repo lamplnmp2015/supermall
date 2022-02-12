@@ -51,7 +51,7 @@ computed: {
   },
   totalCount(){
     return this.cartList.filter((item)=>{
-      return item.isChecked == true
+      return item.isChecked == true;
     }).reduce((preValue,item)=>{
       return preValue+item.count
     },0)

@@ -8,12 +8,23 @@ import Toast from 'components/common/toast'
 import FastClick from 'fastclick'
 import VueLazyLoad from 'vue-lazyload'
 import waterfall from 'vue-waterfall2'
+// import VueSocketIO from 'vue-socket.io'
+// Vue.use(new VueSocketIO({
+//     debug: true,
+//     connection: 'http://81.68.162.14:3000',
+//     vuex: {
+//         store,
+//         actionPrefix: 'SOCKET_',
+//         mutationPrefix: 'SOCKET_'
+//     },
+//     options: { path: "/my-app/" } //Optional options
+// }))
 Vue.use(waterfall)
 Vue.use(VueLazyLoad,{
   loading:require('./assets/img/common/placeholder.png')
 })
 Vue.use(VueLazyLoad,{
-  preload:1.3,
+  preload:1.3, 
   error:'dist/error.png',
   loading:'dist/loading.gif',
   attempt:1,

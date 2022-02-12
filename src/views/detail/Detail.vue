@@ -271,7 +271,7 @@ mounted() {
         this.themeTopYs.push(this.$refs.detailParams.$el.offsetTop);
         this.themeTopYs.push(this.$refs.comment.$el.offsetTop);
         this.themeTopYs.push(this.$refs.goodsList.$el.offsetTop - 40);
-    },300)
+    },500)
   this.imgLoad = debounce(()=>{
     this.$refs.scroller.refresh()
   },500)

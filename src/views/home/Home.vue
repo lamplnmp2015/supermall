@@ -180,7 +180,6 @@ methods:{
   },
   contentScroll(params){
     // console.log(params.y);
-    console.log(params.y);
     this.isFixed = -params.y < this.tabOffSetTop?false:true
     if(params.y < -300){
       
